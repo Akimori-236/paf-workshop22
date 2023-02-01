@@ -62,8 +62,8 @@ public class RSVPRestController {
             @RequestParam("phone") String phone,
             @RequestParam("confirmation_date") Date confirmation_date,
             @RequestParam("comments") String comments) {
-        Boolean isInserted = rsvpSvc.upsertRsvp(name, email, phone, confirmation_date, comments);
-        if (isInserted) {
+        Integer isInserted = rsvpSvc.upsertRsvp(name, email, phone, confirmation_date, comments);
+        if (isInserted > 0) {
             return new ResponseEntity<>("Entry created", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Invalid entry", HttpStatus.NOT_ACCEPTABLE);

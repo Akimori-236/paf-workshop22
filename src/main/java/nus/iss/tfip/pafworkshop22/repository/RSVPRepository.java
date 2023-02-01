@@ -30,7 +30,6 @@ public class RSVPRepository {
             VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             name=VALUES(name),
-            email=VALUES(email),
             phone=VALUES(phone),
             confirmation_date=VALUES(confirmation_date),
             comments=VALUES(comments);
@@ -50,20 +49,20 @@ public class RSVPRepository {
         return rsvpList;
     }
 
-    public Boolean upsertRsvp(String name, String email, String phone, Date confirmation_date, String comments) {
-        Boolean saved = false;
+    public Integer upsertRsvp(String name, String email, String phone, Date confirmation_date, String comments) {
+       Integer rows = 0;
         // execute SQL
-        saved = template.execute(upsertSQL, (PreparedStatementCallback<Boolean>) ps -> {
+        rows = template.execute(upsertSQL, (PreparedStatementCallback<Integer>) ps -> {
             // inject variables into the SQL statement
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, phone);
             ps.setDate(4, confirmation_date);
             ps.setString(5, comments);
-            Boolean result = ps.execute();
+            int result = ps.executeUpdate();
             return result;
         });
-        return saved;
+        return rows;
     }
 
     public Boolean updateRsvp(RSVP rsvp) {
@@ -103,6 +102,7 @@ public class RSVPRepository {
                 ps.setDate(3, rsvp.get(i).getConfirmation_date());
                 ps.setString(4, rsvp.get(i).getComments());
             }
+
             public int getBatchSize() {
                 return rsvp.size();
             }

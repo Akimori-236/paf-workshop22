@@ -47,7 +47,7 @@ public class RSVPService {
         return jab.build().toString();
     }
 
-    public Boolean upsertRsvp(String name, String email, String phone, Date confirmation_date, String comments) {
+    public Integer upsertRsvp(String name, String email, String phone, Date confirmation_date, String comments) {
         return rsvpRepo.upsertRsvp(name, email, phone, confirmation_date, comments);
     }
 
