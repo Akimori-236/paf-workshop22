@@ -45,4 +45,20 @@ public class RSVPService {
         }
         return jab.build().toString();
     }
+
+    public Boolean upsertRsvp(RSVP rsvp) {
+        return rsvpRepo.upsertRsvp(rsvp);
+    }
+
+    public Boolean updateRsvp(RSVP rsvp) {
+        return rsvpRepo.updateRsvp(rsvp);
+    }
+
+    public String countRsvp() {
+        Integer count = rsvpRepo.countRsvp();
+        return Json.createObjectBuilder()
+                .add("no_of_rsvps", count)
+                .build()
+                .toString();
+    }
 }
