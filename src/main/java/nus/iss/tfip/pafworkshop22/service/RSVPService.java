@@ -32,16 +32,17 @@ public class RSVPService {
     }
 
     public String getRsvpByName(String name) {
-        RSVP r = rsvpRepo.getByName(name);
-        return Json.createObjectBuilder()
-                .add("id", r.getId())
-                .add("name", r.getName())
-                .add("email", r.getEmail())
-                .add("phone", r.getPhone())
-                .add("confirmation_date", r.getConfirmation_date().toString())
-                .add("comments", "%s".formatted(r.getComments()))
-                .build()
-                .toString();
-
+        List<RSVP> rsvpList = rsvpRepo.getByName(name);
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for (RSVP r : rsvpList) {
+            jab.add(Json.createObjectBuilder()
+                    .add("id", r.getId())
+                    .add("name", r.getName())
+                    .add("email", r.getEmail())
+                    .add("phone", r.getPhone())
+                    .add("confirmation_date", r.getConfirmation_date().toString())
+                    .add("comments", "%s".formatted(r.getComments())));
+        }
+        return jab.build().toString();
     }
 }
