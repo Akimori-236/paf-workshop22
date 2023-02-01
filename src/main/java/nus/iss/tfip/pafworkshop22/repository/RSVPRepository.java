@@ -1,14 +1,19 @@
 package nus.iss.tfip.pafworkshop22.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import nus.iss.tfip.pafworkshop22.model.RSVP;
 
@@ -45,17 +50,21 @@ public class RSVPRepository {
         return rsvpList;
     }
 
-    public Boolean upsertRsvp(RSVP rsvp) {
-        int affectedRows = template.update(upsertSQL, (PreparedStatementSetter) ps -> {
-            ps.setString(1, rsvp.getName());
-            ps.setString(2, rsvp.getEmail());
-            ps.setString(3, rsvp.getPhone());
-            ps.setDate(4, rsvp.getConfirmation_date());
-            ps.setString(5, rsvp.getComments());
+    public Boolean upsertRsvp(String name, String email, String phone, Date confirmation_date, String comments) {
+        Boolean saved = false;
+        // execute SQL
+        saved = template.execute(upsertSQL, (PreparedStatementCallback<Boolean>) ps -> {
+            // inject variables into the SQL statement
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            ps.setDate(4, confirmation_date);
+            ps.setString(5, comments);
+            Boolean result = ps.execute();
+            return result;
         });
-        return affectedRows > 0;
+        return saved;
     }
-    
 
     public Boolean updateRsvp(RSVP rsvp) {
         Boolean saved = false;
@@ -81,5 +90,22 @@ public class RSVPRepository {
         } else {
             return count;
         }
+    }
+
+    @Transactional
+    public int[] batchInsert(List<RSVP> rsvp) {
+        return template.batchUpdate(upsertSQL, (BatchPreparedStatementSetter) new BatchPreparedStatementSetter() {
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                // inject variables into the SQL statement
+                ps.setString(1, rsvp.get(i).getName());
+                ps.setString(5, rsvp.get(i).getEmail());
+                ps.setString(2, rsvp.get(i).getPhone());
+                ps.setDate(3, rsvp.get(i).getConfirmation_date());
+                ps.setString(4, rsvp.get(i).getComments());
+            }
+            public int getBatchSize() {
+                return rsvp.size();
+            }
+        });
     }
 }

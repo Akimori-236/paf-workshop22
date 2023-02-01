@@ -1,5 +1,7 @@
 package nus.iss.tfip.pafworkshop22.controller;
 
+import java.sql.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -54,10 +56,13 @@ public class RSVPRestController {
 
     // @PostMapping(path="")
 
-
-    @PostMapping(path = "/rsvp")
-    public ResponseEntity<String> upsertRsvp(@RequestBody RSVP rsvp) {
-        Boolean isInserted = rsvpSvc.upsertRsvp(rsvp);
+    @PostMapping(path = "/rsvp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<String> upsertRsvp(@RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("confirmation_date") Date confirmation_date,
+            @RequestParam("comments") String comments) {
+        Boolean isInserted = rsvpSvc.upsertRsvp(name, email, phone, confirmation_date, comments);
         if (isInserted) {
             return new ResponseEntity<>("Entry created", HttpStatus.CREATED);
         } else {

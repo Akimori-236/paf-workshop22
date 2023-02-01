@@ -1,5 +1,6 @@
 package nus.iss.tfip.pafworkshop22.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,8 @@ public class RSVPService {
         return jab.build().toString();
     }
 
-    public Boolean upsertRsvp(RSVP rsvp) {
-        return rsvpRepo.upsertRsvp(rsvp);
+    public Boolean upsertRsvp(String name, String email, String phone, Date confirmation_date, String comments) {
+        return rsvpRepo.upsertRsvp(name, email, phone, confirmation_date, comments);
     }
 
     public Boolean updateRsvp(RSVP rsvp) {
