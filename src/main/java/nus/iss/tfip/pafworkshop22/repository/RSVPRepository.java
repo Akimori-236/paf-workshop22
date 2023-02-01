@@ -16,11 +16,18 @@ public class RSVPRepository {
     @Autowired
     JdbcTemplate template;
 
+    String getAllSQL = "SELECT * FROM rsvp";
+    String getByNameSQL = "SELECT * From rsvp WHERE name=?";
 
     public List<RSVP> getAllRsvp() {
         List<RSVP> rsvpList = new LinkedList<>();
         rsvpList = template.query("SELECT * FROM rsvp", BeanPropertyRowMapper.newInstance(RSVP.class));
         return rsvpList;
     }
-    
+
+    public RSVP getByName(String name) {
+        RSVP rsvp = template.queryForObject(getByNameSQL, BeanPropertyRowMapper.newInstance(RSVP.class), name);
+        return rsvp;
+    }
+
 }

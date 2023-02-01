@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
-import jakarta.json.JsonObjectBuilder;
-
 import nus.iss.tfip.pafworkshop22.model.RSVP;
 import nus.iss.tfip.pafworkshop22.repository.RSVPRepository;
 
@@ -22,26 +20,28 @@ public class RSVPService {
         List<RSVP> rsvpList = rsvpRepo.getAllRsvp();
         JsonArrayBuilder jab = Json.createArrayBuilder();
         for (RSVP r : rsvpList) {
-            Json.createObjectBuilder()
+            jab.add(Json.createObjectBuilder()
+                    .add("id", r.getId())
+                    .add("name", r.getName())
+                    .add("email", r.getEmail())
+                    .add("phone", r.getPhone())
+                    .add("confirmation_date", r.getConfirmation_date().toString())
+                    .add("comments", "%s".formatted(r.getComments())));
+        }
+        return jab.build().toString();
+    }
+
+    public String getRsvpByName(String name) {
+        RSVP r = rsvpRepo.getByName(name);
+        return Json.createObjectBuilder()
+                .add("id", r.getId())
                 .add("name", r.getName())
                 .add("email", r.getEmail())
                 .add("phone", r.getPhone())
                 .add("confirmation_date", r.getConfirmation_date().toString())
-                .add("comments", r.getComments())
-                .build();
-            
-            }
-        return null;
+                .add("comments", "%s".formatted(r.getComments()))
+                .build()
+                .toString();
+
     }
-    // public JsonObjectBuilder toJson() {
-    //     JsonArrayBuilder jab = Json.createArrayBuilder();
-    //     for (Type t : this.types) {
-    //         jab.add(Json.createObjectBuilder()
-    //                 .add("type", t.getType())
-    //                 .add("count", t.getCount()));
-    //     }
-    //     return Json.createObjectBuilder()
-    //             .add("totalCount", this.getTotal_count())
-    //             .add("types", jab);
-    // }
 }
