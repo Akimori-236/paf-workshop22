@@ -21,7 +21,7 @@ public class RSVPService {
         JsonArrayBuilder jab = Json.createArrayBuilder();
         for (RSVP r : rsvpList) {
             jab.add(Json.createObjectBuilder()
-                    .add("id", r.getId())
+                    // .add("id", r.getId())
                     .add("name", r.getName())
                     .add("email", r.getEmail())
                     .add("phone", r.getPhone())
@@ -36,7 +36,7 @@ public class RSVPService {
         JsonArrayBuilder jab = Json.createArrayBuilder();
         for (RSVP r : rsvpList) {
             jab.add(Json.createObjectBuilder()
-                    .add("id", r.getId())
+                    // .add("id", r.getId())
                     .add("name", r.getName())
                     .add("email", r.getEmail())
                     .add("phone", r.getPhone())

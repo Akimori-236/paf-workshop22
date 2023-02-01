@@ -52,7 +52,10 @@ public class RSVPRestController {
         }
     }
 
-    @PostMapping(path = "/rsvp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // @PostMapping(path="")
+
+
+    @PostMapping(path = "/rsvp")
     public ResponseEntity<String> upsertRsvp(@RequestBody RSVP rsvp) {
         Boolean isInserted = rsvpSvc.upsertRsvp(rsvp);
         if (isInserted) {
@@ -62,6 +65,7 @@ public class RSVPRestController {
         }
     }
 
+    // USING EMAIL AS PRIMARY KEY
     @PutMapping(path = "/rsvp/{email}")
     public ResponseEntity<String> updateRsvp(@PathVariable(value = "email") String email, @RequestBody RSVP rsvp) {
         Boolean isInserted = rsvpSvc.updateRsvp(rsvp);
